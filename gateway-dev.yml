@@ -1,0 +1,41 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    config:
+      uri: http://localhost:8888  # 服务配置中心地址
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # 开启注册发现, 从服务中心拉取服务列表, 可以通过服务名进行路由并负载均衡
+      routes: # 路由配置
+        #        - id: payment_route1  # 路由id
+        #          uri: http://localhost:8001  # 匹配提供服务的路由主机地址
+        #          predicates:
+        #            - Path=/payment/get/**  # 路径匹配则进行路由
+        - id: payment_route
+          uri: lb://cloud-payment-service # 路由到微服务cloud-payment-service
+          predicates:
+            - Path=/cloud-payment-service/**
+          filters:
+            # 1表示过滤1个路径  2表示过滤两个路径，依次类推
+            - StripPrefix=1
+#        - id: payment_route2
+#          uri: http://localhost:8001
+#          predicates:
+#            - Path=/payment/lb/**
+
+# Eureka客户端配置
+eureka:
+  client:
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7001.com:7001/eureka
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true # 显示实际ip地址
+#    instance-id: payment8002 # 网页上显示的名称, 默认是 主机名:服务名:端口
+
