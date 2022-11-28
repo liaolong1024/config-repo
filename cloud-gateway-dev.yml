@@ -1,3 +1,4 @@
+# curl localhost:8888/cloud-gateway/dev   该文件可以通过该路径访问到
 server:
   port: 9527
 
